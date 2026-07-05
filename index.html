@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduDesk — Student Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">ED</div>
+      <div class="brand-text">
+        <span class="brand-name">EduDesk</span>
+        <span class="brand-sub">Student Records</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="#" class="nav-item active">
+        <span class="nav-icon">▤</span> Dashboard
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon">◎</span> Departments
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon">✉</span> Messages
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon">⚙</span> Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar">AK</div>
+        <div class="user-info">
+          <span class="user-name">Admin</span>
+          <span class="user-role">Registrar</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div>
+        <h1 class="page-title">Students</h1>
+        <p class="page-sub">Manage enrolled student records</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="search-box">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="searchInput" placeholder="Search by name or email..." />
+        </div>
+        <button class="btn btn-primary" id="addStudentBtn">+ Add Student</button>
+      </div>
+    </header>
+
+    <!-- Stat cards -->
+    <section class="stats">
+      <div class="stat-card">
+        <span class="stat-label">Total Students</span>
+        <span class="stat-value" id="statTotal">0</span>
+        <span class="stat-note">All records</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Active</span>
+        <span class="stat-value accent-green" id="statActive">0</span>
+        <span class="stat-note">Currently enrolled</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Departments</span>
+        <span class="stat-value accent-gold" id="statDepts">0</span>
+        <span class="stat-note">Distinct programs</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Average Score</span>
+        <span class="stat-value accent-blue" id="statAvg">0%</span>
+        <span class="stat-note">Across all students</span>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters">
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab active" data-filter="all">All</button>
+        <button class="filter-tab" data-filter="active">Active</button>
+        <button class="filter-tab" data-filter="inactive">Inactive</button>
+      </div>
+      <select id="deptFilter" class="dept-select">
+        <option value="all">All Departments</option>
+      </select>
+    </section>
+
+    <!-- Table -->
+    <section class="table-card">
+      <table class="student-table">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Department</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th class="th-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+      <div class="empty-state hidden" id="emptyState">
+        <p>No students found.</p>
+        <span>Try a different search or add a new student.</span>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add Student</h2>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <form id="studentForm" class="modal-body">
+      <input type="hidden" id="studentId" />
+
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" placeholder="e.g. Ravi Sharma" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="e.g. ravi@example.com" required />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="department">Department</label>
+          <select id="department" required>
+            <option value="">Select department</option>
+            <option>Computer Science</option>
+            <option>Electronics</option>
+            <option>Mechanical</option>
+            <option>Civil</option>
+            <option>Business Admin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="score">Score (%)</label>
+          <input type="number" id="score" min="0" max="100" placeholder="e.g. 85" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" required>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">Save Student</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-overlay hidden" id="deleteOverlay">
+  <div class="modal modal-sm">
+    <div class="modal-body confirm-body">
+      <div class="confirm-icon">!</div>
+      <h2>Delete this student?</h2>
+      <p>This action can't be undone. The record will be permanently removed.</p>
+      <div class="modal-footer center">
+        <button class="btn btn-ghost" id="cancelDeleteBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
